@@ -43,7 +43,7 @@ def analyze_sentiment(text):
         sentiment = 'negative'
     else:
         sentiment = 'neutral'
-    return sentiment
+    return sentiment, polarity
 
 # Test the model on sample reviews
 sample_reviews = [
@@ -52,13 +52,19 @@ sample_reviews = [
     "It's okay, not great but not terrible either."
 ]
 
+# Initialize lists to store sentiment and polarity scores
+sentiments = []
+polarity_scores = []
+
 for review in sample_reviews:
     preprocessed_review = preprocess_text(review)
-    sentiment = analyze_sentiment(preprocessed_review)
-    print(f"Review: {review}\nSentiment: {sentiment}\n")
+    sentiment, polarity = analyze_sentiment(preprocessed_review)
+    sentiments.append(sentiment)
+    polarity_scores.append(polarity)
+    print(f"Review: {review}\nSentiment: {sentiment}\nPolarity: {polarity}\n")
 
 # Generate report
-summary = """
+summary = f"""
 Amazon Product Reviews Sentiment Analysis Report
 
 Description of the Dataset:
@@ -82,7 +88,16 @@ Strengths:
 Limitations:
 - Limited accuracy due to the basic sentiment analysis model.
 - May not handle complex sentences and nuanced sentiments well.
+
+Sample Reviews Analysis:
 """
+
+# Add sample reviews analysis to the summary
+for i, review in enumerate(sample_reviews):
+    summary += f"\nReview {i+1}:\n- Text: {review}\n- Sentiment: {sentiments[i]}\n- Polarity Score: {polarity_scores[i]}\n"
+
+# Add similarity score to the summary
+summary += f"\nSimilarity Score between Review 1 and Review 2: {similarity_score}\n"
 
 # Create PDF using FPDF
 class PDF(FPDF):
